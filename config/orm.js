@@ -6,7 +6,7 @@ var connection = require("../config/connection.js");
 // In order to write the query, we need 3 question marks.
 // The above helper function loops through and creates an array of question marks - ["?", "?", "?"] - and turns it into a string.
 // ["?", "?", "?"].toString() => "?,?,?";
-function printQuestionMarks(num) {
+/*function printQuestionMarks(num) {
   var arr = [];
 
   for (var i = 0; i < num; i++) {
@@ -37,20 +37,19 @@ function objToSql(ob) {
 
   // translate array of strings to a single comma-separated string
   return arr.toString();
-}
+}*/
 
 // Object for all our SQL statement functions.
 var orm = {
   selectAll: function(tableInput, cb) {
-    var queryString = "SELECT * FROM " + tableInput + ";";
-    connection.query(queryString, function(err, result) {
-      if (err) {
-        throw err;
-      }
-      cb(result);
-    });
+    //var queryString = "SELECT * FROM " + tableInput + ";";
+    connection.query('SELECT * FROM ' + tableInput + ';', function(err,
+      result){
+          if(err) throw err;
+          cb(result)
+      })
   },
-  insertOne: function(table, cols, vals, cb) {
+  /*insertOne: function(table, cols, vals, cb) {
     var queryString = "INSERT INTO " + table; 
 
     queryString += " (";
@@ -69,25 +68,41 @@ var orm = {
 
       cb(result);
     });
-  },
-  // An example of objColVals would be {name: panther, sleepy: true}
-  updateOne: function(table, objColVals, condition, cb) {
-    var queryString = "UPDATE " + table;
+  },*/
 
-    queryString += " SET ";
+  create: function(tableInput,val,cb){
+    connection.query('INSERT INTO ' + tableInput + " (burger_name)VALUES ('"
+    + val + "');", function(err,result){
+        if(err) throw err;
+        cb(result);
+    })
+},
+
+  // An example of objColVals would be {name: panther, sleepy: true}
+  updateOne: function(tableInput, val, cb) {
+    connection.query("UPDATE " + tableInput + ' SET devoured=true WHERE id=' +
+    condition + ';', function(err, results){
+      if (err) throw err;
+      cb(result);
+  })
+  }
+}
+    
+
+    /*queryString += " SET ";
     queryString += objToSql(objColVals);
     queryString += " WHERE ";
     queryString += condition;
 
     console.log(queryString);
-    connection.query(queryString, function(err, result) {
+      connection.query(queryString, function(err, result) {
       if (err) {
         throw err;
       }
 
-      cb(result);
-    });
-  },
+      cb(result);*/
+    //})
+  //},
   /*delete: function(table, condition, cb) {
     var queryString = "DELETE FROM " + table;
     queryString += " WHERE ";
@@ -101,7 +116,7 @@ var orm = {
       cb(result);
     });
   }*/
-};
+
 
 // Export the orm object for the model (cat.js).
 module.exports = orm;
